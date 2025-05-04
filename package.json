@@ -10,7 +10,6 @@
     "start:server": "cross-env pm2 start dist/main.js --name \"bioli-ink-core-server-${NODE_ENV}\"",
     "stop:server": "cross-env pm2 delete bioli-ink-core-server-${NODE_ENV}",
     "restart:server": "npm run stop:server && npm run start:server",
-
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -67,6 +66,7 @@
     "@types/validator": "^13.12.2",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
