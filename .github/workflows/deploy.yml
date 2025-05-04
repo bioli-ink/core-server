@@ -31,7 +31,7 @@ jobs:
           chmod 600 ~/.ssh/private.key
       - name: Add known hosts
         run: |
-          ssh-keyscan -H ${{ vars.SERVER_HOST_IP }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.SERVER_HOST_IP }} >> ~/.ssh/known_hosts
 
       # 创建.env文件并写入密钥
       - name: Create .env file
@@ -58,8 +58,8 @@ jobs:
 
       - name: Deploy to Server
         env:
-          SERVER_HOST: ${{ vars.SERVER_HOST_IP }}
-          SERVER_USERNAME: ${{ vars.SERVER_USERNAME }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST_IP }}
+          SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
           DEPLOY_PATH: /app/bioli.ink-org/${{ github.ref == 'refs/heads/main' && 'production' || 'test' }}
           NODE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || 'test' }}
 
@@ -67,9 +67,6 @@ jobs:
           npm run update-schema && \
           # 打包应用
           NODE_ENV=$NODE_ENV npm run build:server
-
-          echo "SERVER_HOST_IP: ${{vars.SERVER_HOST_IP}}"
-          echo "SERVER_USERNAME: ${{vars.SERVER_USERNAME}}"
 
           # 将应用文件传输到服务器
           rsync -avz --delete \
