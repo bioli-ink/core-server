@@ -68,6 +68,9 @@ jobs:
           # 打包应用
           NODE_ENV=$NODE_ENV npm run build:server
 
+          cat ~/.ssh/private.key
+          echo "secrets.SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}"
+
           # 将应用文件传输到服务器
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/private.key" \
