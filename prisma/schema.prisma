@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id                 String              @id @unique @db.VarChar(8)
+  mobile             String              @unique @db.VarChar(20)
+  imsi               String              @db.VarChar(5)
+  username           String?             @unique @db.VarChar(256)
+  password           String?             @db.VarChar(32)
+  email              String?             @unique @db.VarChar(128)
+  create_time        DateTime            @default(now())
+  update_time        DateTime            @default(now()) @updatedAt
+  base_config base_config? @relation("UserBaseConfig")
+  modules            modules?           @relation("UserModules")
+  theme              theme[]             @relation("UserTheme")
+}
+
+model base_config {
+  id          String   @id @unique @db.VarChar(8)
+  user_id     String   @unique @db.VarChar(8)
+  type        Int      @default(1) @db.UnsignedTinyInt
+  other_type  String   @default("") @db.VarChar(20)
+  name        String   @default("") @db.VarChar(50)
+  avatar      String   @default("") @db.VarChar(100)
+  bio         String?  @db.MediumText
+  platform    String?  @db.Text
+  theme_id    String   @default("") @db.VarChar(32)
+  create_time DateTime @default(now())
+  update_time DateTime @default(now()) @updatedAt
+  user        user     @relation("UserBaseConfig", fields: [user_id], references: [id])
+}
+
+model modules {
+  id          String     @id @unique @db.VarChar(32)
+  user_id     String     @unique @db.VarChar(8)
+  json        String     @db.LongText
+  // type        ModuleType
+  // status      Int        @db.UnsignedTinyInt
+  // order_idx   Int        @default(0) @db.SmallInt
+  // name        String     @db.VarChar(100)
+  // detail      String     @db.MediumText
+  create_time DateTime   @default(now())
+  update_time DateTime   @default(now()) @updatedAt
+  user        user       @relation("UserModules", fields: [user_id], references: [id])
+
+  // @@index([user_id], map: "modules_user_id_fkey")
+}
+
+model theme {
+  id          String   @id @unique @db.VarChar(32)
+  author_id   String   @db.VarChar(8)
+  type        Int?     @default(1) @db.UnsignedTinyInt
+  status      Int?     @default(1) @db.UnsignedTinyInt
+  header      String?  @db.Text
+  font        String?  @db.Text
+  background  String?  @db.Text
+  module      String?  @db.Text
+  social      String?  @db.Text
+  sharing     String?  @db.Text
+  create_time DateTime @default(now())
+  update_time DateTime @default(now()) @updatedAt
+  user        user     @relation("UserTheme", fields: [author_id], references: [id])
+
+  @@index([author_id], map: "theme_author_id_fkey")
+}
+
+enum ModuleType {
+  URL
+  IMAGE
+  TEXT
+}
