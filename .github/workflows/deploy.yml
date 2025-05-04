@@ -39,7 +39,16 @@ jobs:
           # 确保文件存在并以换行符结尾
           [ -f .env ] && echo "" >> .env || touch .env
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-          echo "API_SERVER_HOST=${{ vars.API_SERVER_HOST }}" >> .env
+          echo "PORT=${{ vars.PORT }}" >> .env
+          echo "LOGIN_AUTH_KEY=${{ secrets.LOGIN_AUTH_KEY }}" >> .env
+          echo "HEADER_ID_KEY=${{ secrets.HEADER_ID_KEY }}" >> .env
+          echo "HEADER_USERNAME_KEY=${{ secrets.HEADER_USERNAME_KEY }}" >> .env
+          echo "QINIU_ACCESS_KEY=${{ secrets.QINIU_ACCESS_KEY }}" >> .env
+          echo "QINIU_SECRET_KEY=${{ secrets.QINIU_SECRET_KEY }}" >> .env
+          echo "AVATAR_QINIU_BUCKET=${{ secrets.AVATAR_QINIU_BUCKET }}" >> .env
+          echo "ALIBABA_CLOUD_ACCESS_KEY_ID=${{ secrets.ALIBABA_CLOUD_ACCESS_KEY_ID }}" >> .env
+          echo "ALIBABA_CLOUD_ACCESS_KEY_SECRET=${{ secrets.ALIBABA_CLOUD_ACCESS_KEY_SECRET }}" >> .env
+          echo "DAILY_IMAGE_DOMAIN=${{ vars.DAILY_IMAGE_DOMAIN }}" >> .env
 
       - name: Install pnpm
         run: npm install -g pnpm
