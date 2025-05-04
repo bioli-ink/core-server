@@ -38,33 +38,8 @@ jobs:
         run: |
           # 确保文件存在并以换行符结尾
           [ -f .env ] && echo "" >> .env || touch .env
-          # echo "TENCENTCLOUD_SECRET_ID=${{ secrets.TENCENTCLOUD_SECRET_ID }}" >> .env
-          # echo "TENCENTCLOUD_SECRET_KEY=${{ secrets.TENCENTCLOUD_SECRET_KEY }}" >> .env
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-          # echo "AUTHING_APP_ID=${{ secrets.AUTHING_APP_ID }}" >> .env
-          # echo "AUTHING_SECRET=${{ secrets.AUTHING_SECRET }}" >> .env
-          # echo "AUTHING_APP_HOST=${{ secrets.AUTHING_APP_HOST }}" >> .env
-          # echo "WECHAT_PAY_DOMAIN=${{ secrets.WECHAT_PAY_DOMAIN }}" >> .env
-          # echo "WECHAT_APPID=${{ secrets.WECHAT_APPID }}" >> .env
-          # echo "WECHAT_APP_SECRET=${{ secrets.WECHAT_APP_SECRET }}" >> .env
-          # echo "WECHAT_PAY_MERCHANT_ID=${{ secrets.WECHAT_PAY_MERCHANT_ID }}" >> .env# 
-          # echo "WECHAT_PAY_PRIVATE_KEY=${{ secrets.WECHAT_PAY_PRIVATE_KEY }}" >> .env
-          # echo "WECHAT_PAY_PUBLIC_KEY=${{ secrets.WECHAT_PAY_PUBLIC_KEY }}" >> .env
-          # echo "WECHAT_PAY_API_V3_PRIVATE_KEY=${{ secrets.WECHAT_PAY_API_V3_PRIVATE_KEY }}" >> .env
-          # echo "WECHAT_PAY_SERIAL_NO=${{ secrets.WECHAT_PAY_SERIAL_NO }}" >> .env
-          # echo "ALIPAY_APP_ID=${{ secrets.ALIPAY_APP_ID }}" >> .env
-          # echo "ALIPAY_PRIVATE_KEY=${{ secrets.ALIPAY_PRIVATE_KEY }}" >> .env
-          # echo "ALIPAY_PUBLIC_KEY=${{ secrets.ALIPAY_PUBLIC_KEY }}" >> .env
-
           echo "API_SERVER_HOST=${{ vars.API_SERVER_HOST }}" >> .env
-          # echo "CORS_DOMAIN=${{ vars.CORS_DOMAIN }}" >> .env
-          # echo "MOCK_USER_ID=${{ vars.MOCK_USER_ID }}" >> .env
-          # echo "PORT=${{ vars.PORT }}" >> .env
-
-          # echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-          # echo "JWT_EXPIRES_IN=${{ vars.JWT_EXPIRES_IN }}" >> .env
-          # echo "MOBILE_WHITE_LIST=${{ vars.MOBILE_WHITE_LIST }}" >> .env
-          # echo "SMS_SIGN_NAME=${{ vars.SMS_SIGN_NAME }}" >> .env
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -72,14 +47,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      # - name: Run tests
-      #   run: pnpm run test
-
       - name: Deploy to Server
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST_IP }}
           SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
-          DEPLOY_PATH: /app/sworld-server/${{ github.ref == 'refs/heads/main' && 'production' || 'test' }}
+          DEPLOY_PATH: /app/bioli.ink-org/${{ github.ref == 'refs/heads/main' && 'production' || 'test' }}
           NODE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || 'test' }}
 
         run: |
