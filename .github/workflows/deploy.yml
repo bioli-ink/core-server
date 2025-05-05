@@ -60,7 +60,7 @@ jobs:
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST_IP }}
           SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
-          DEPLOY_PATH: /app/bioli.ink-org/${{ github.ref == 'refs/heads/master' && 'production' || 'test' }}
+          DEPLOY_PATH: /app/bioli.ink-org/core-server/${{ github.ref == 'refs/heads/master' && 'production' || 'test' }}
           NODE_ENV: ${{ github.ref == 'refs/heads/master' && 'production' || 'test' }}
 
         run: |
