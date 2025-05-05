@@ -14,6 +14,7 @@ import { ModuleService } from './app/module/module.service';
 import { ClientUserController } from './app/client-user/client-user.controller';
 import { TransferController } from './app/transfer/transfer.controller';
 import { AuthMiddleware } from './middleware/auth';
+import { LoggerMiddleware } from './middleware/logger';
 
 @Module({
   imports: [HttpModule, AppConfigModule, PrismaModule],
@@ -35,7 +36,7 @@ import { AuthMiddleware } from './middleware/auth';
 })
 export class AppModule  implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    // consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer.apply(LoggerMiddleware).forRoutes('*');
     consumer.apply(AuthMiddleware).forRoutes('*');
   }
 }
