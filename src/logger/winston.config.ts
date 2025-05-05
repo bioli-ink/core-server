@@ -9,13 +9,12 @@ const getLoggerDir = (() => {
       dir = 'logs';
       break;
     case 'test':
-      dir = '/data/log/test';
-      break;
+      dir = 'test';
     case 'production':
-      dir = '/data/log/production';
-      break;
+      dir = 'production';
     default:
-      dir = '/data/log/unknown_env';
+      dir = 'unknown_env';
+      dir = `/data/log/bioli.ink/core-server/${dir}`;
       break;
   }
 
