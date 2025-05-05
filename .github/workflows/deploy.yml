@@ -6,13 +6,13 @@ on:
   push:
     branches:
       - 'test' # 测试环境分支
-      - 'main' # 生产环境分支
+      - 'master' # 生产环境分支
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     # 根据分支来决定环境，main分支为生产环境，其他分支为test环境
-    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'test' }}
+    environment: ${{ github.ref == 'refs/heads/master' && 'production' || 'test' }}
     permissions:
       contents: write # 允许工作流写入内容（用于部署）
     steps:
@@ -60,16 +60,13 @@ jobs:
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST_IP }}
           SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
-          DEPLOY_PATH: /app/bioli.ink-org/${{ github.ref == 'refs/heads/main' && 'production' || 'test' }}
-          NODE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || 'test' }}
+          DEPLOY_PATH: /app/bioli.ink-org/${{ github.ref == 'refs/heads/master' && 'production' || 'test' }}
+          NODE_ENV: ${{ github.ref == 'refs/heads/master' && 'production' || 'test' }}
 
         run: |
           npm run update-schema && \
           # 打包应用
           NODE_ENV=$NODE_ENV npm run build:server
-
-          cat ~/.ssh/private.key
-          echo "secrets.SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}"
 
           # 将应用文件传输到服务器
           rsync -avz --delete \
