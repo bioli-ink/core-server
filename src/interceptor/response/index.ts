@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { logger } from 'src/logger/winston.config';
 import { statusTextTransform } from 'src/utils/code';
 
 @Injectable()
@@ -18,16 +19,47 @@ export class ResponseInterceptor implements NestInterceptor {
       .handle()
       .pipe(
         map((data) => {
-          return {
-            data,
-            code: 0,
-            message: '',
-          };
+          const returnData = data?.code
+            ? data
+            : {
+                data,
+                code: 0,
+                message: '',
+              };
+          const args = context.getArgs()[0];
+          const headers = args.headers;
+
+          // 接口正常返回，输出日志
+          logger.info(
+            [
+              `[status: success]`,
+              `[method: ${args.method}]`,
+              `[url: ${args.url}]`,
+              `[traceId: ${headers['x-trace-id'] || ''}]`,
+              `[uid: ${headers.user.id || 'anonymous'}]`,
+              `[response: ${JSON.stringify(returnData)}]`,
+            ].join(' '),
+          );
+
+          return returnData;
         }),
       )
       .pipe(
         catchError((err) => {
-          // TODO logger error
+          const args = context.getArgs()[0];
+          const headers = args.headers;
+
+          // 接口报错，输出日志
+          logger.error(
+            [
+              `[status: error]`,
+              `[method: ${args.method}]`,
+              `[url: ${args.url}]`,
+              `[traceId: ${headers['x-trace-id'] || ''}]`,
+              `[uid: ${headers.user.id || 'anonymous'}]`,
+              `[response: ${JSON.stringify(err)}]`,
+            ].join(' '),
+          );
 
           if (!err.response) {
             return throwError(

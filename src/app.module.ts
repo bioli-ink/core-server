@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppConfigModule } from './config/app-config.module';
 import { HttpModule } from '@nestjs/axios';
 import { AuthController } from './app/auth/auth.controller';
@@ -13,6 +13,8 @@ import { ModuleController } from './app/module/module.controller';
 import { ModuleService } from './app/module/module.service';
 import { ClientUserController } from './app/client-user/client-user.controller';
 import { TransferController } from './app/transfer/transfer.controller';
+import { AuthMiddleware } from './middleware/auth';
+import { LoggerMiddleware } from './middleware/logger';
 
 @Module({
   imports: [HttpModule, AppConfigModule, PrismaModule],
@@ -32,4 +34,9 @@ import { TransferController } from './app/transfer/transfer.controller';
     ModuleService,
   ],
 })
-export class AppModule {}
+export class AppModule  implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer.apply(AuthMiddleware).forRoutes('*');
+  }
+}

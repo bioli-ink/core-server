@@ -9,6 +9,14 @@ export class AppConfigService {
     return process.env.NODE_ENV === 'development';
   }
 
+  public isProd() {
+    return process.env.NODE_ENV === 'production';
+  }
+
+  public isNotProd() {
+    return process.env.NODE_ENV !== 'production';
+  }
+
   public port() {
     return Number(this.config.get<string>('PORT'));
   }
