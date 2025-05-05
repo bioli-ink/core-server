@@ -5,8 +5,8 @@ import { AppConfigService } from './config/app-config.service';
 import { ValidationPipe } from '@nestjs/common';
 import { ResponseInterceptor } from './interceptor/response';
 import { traceIdMiddleware } from './middleware/trace-id';
-import { AuthMiddleware } from './middleware/auth';
 import { KeyCaseTransformInterceptor } from './interceptor/key-case-transform';
+import { createDocs } from './utils/swagger-doc';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,7 +21,6 @@ async function bootstrap() {
     credentials: true, // 允许携带凭证（包括Cookies）
   });
 
-  app.use(AuthMiddleware);
   app.use(traceIdMiddleware);
   app.useGlobalPipes(
     new ValidationPipe({
@@ -33,6 +32,12 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   const config = app.select(AppConfigModule).get(AppConfigService);
+
+  // 正式环境不生成接口文档
+  if (config.isNotProd()) {
+    await createDocs(app);
+  }
+
   const PORT = config.port();
 
   console.log(`app listen on ${PORT}`);
